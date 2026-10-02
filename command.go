@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"os"
+
+	"github.com/charmbracelet/huh"
 )
 
 func register() error {
@@ -35,9 +37,27 @@ func list() error {
 	if err != nil {
 		return err
 	}
+	var options []huh.Option[int]
 	for idx, val := range data {
-		fmt.Printf("%d - %s (%s@%s)\n", idx + 1, val.Name, val.User, val.Host)
+		label := fmt.Sprintf("%d - %s (%s@%s)", idx + 1, val.Name, val.User, val.Host)
+		options = append(options, huh.NewOption(label, idx))
 	}
+
+	var choice int
+	err = huh.NewSelect[int]().
+		Title("Escolha uma opção").
+		Options(options...).
+		Value(&choice).
+		Run()
+
+	if err != nil {
+		return err
+	}
+
+	if err := connect(data[choice].Name); err != nil {
+		return err
+	}
+
 	return nil
 }
 

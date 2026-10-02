@@ -87,6 +87,7 @@ func connect(name string) error {
 	if err != nil {
 		return err
 	}
+	fmt.Println("Iniciando conexão...")
 	cmd := exec.Command("ssh", fmt.Sprintf("%s@%s", conn.User, conn.Host))
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout

@@ -29,20 +29,20 @@ func run() error {
 	}
 
 	if len(os.Args) < 2 {
-		return errors.New("uso: sshm new | list | connect <nome>")
+		if err := list(); err != nil {
+			return err
+		}
 	}
 
 	command := os.Args[1]
 
 	switch command {
 	case "new":
-		err := register()
-		if err != nil {
+		if err := register(); err != nil {
 			return err
 		}
 	case "list":
-		err := list()
-		if err != nil {
+		if err := list(); err != nil {
 			return err
 		}
 	case "connect":
@@ -50,7 +50,9 @@ func run() error {
 			return errors.New("Nome de conexão inválida!")
 		}
 		name := os.Args[2]
-		connect(name)
+		if err := connect(name); err != nil {
+			return err
+		}
 	default:
 		return errors.New("Comando não encontrado!")
 	}
